@@ -34,12 +34,16 @@
 
 
 %3) Schrijf een merge sort/2
-msort([],[]).
-msort([L|R],Sorted):-
-	split([],L,R).
-	
-split([],[],[]).
+msort(X,X):-
+	listlength(X,1),
+	!.
+msort(List,Sorted):-
+	split(List,L,R),
+	msort(L,S1),
+	msort(R,S2),
+	merge(S1,S2,Sorted).
 
+split([],[],[]).
 split(List,L,R):-
 	listlength(List,K),
 	(
@@ -53,9 +57,7 @@ split(List,L,R):-
 		K is 2*N-1
 	).
 
-
 listlength([],0).
 listlength([ _ | Rest ],Len) :-
 		listlength(Rest,LenRest),
-		Len is LenRest + 1 . 
-
+		Len is LenRest + 1.
