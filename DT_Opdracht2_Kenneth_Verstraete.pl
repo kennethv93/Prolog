@@ -78,7 +78,7 @@ msort(List,Sorted):-
 	split(List,L,R),
 	msort(L,S1),
 	msort(R,S2),
-	merge(S1,S2,Sorted).
+	merge_(S1,S2,Sorted).
 
 split([],[],[]).
 split(List,L,R):-
@@ -93,6 +93,25 @@ split(List,L,R):-
 		listlength(L,N),
 		K is 2*N-1
 	).
+
+merge_([],[],[]).
+merge_(X,[],X).
+merge_([],X,X).
+
+merge_(X,Y,Result):-
+	X\=[],
+	Y\=[],
+	X = [XHead|XRest],
+	Y = [YHead|YRest],
+	(
+	XHead < YHead ->
+		append(XHead,MergeResult,Result),
+		merge_(XRest,Y,MergeResult)
+	;
+		append(YHead,MergeResult2,Result),
+		merge_(X,YRest,MergeResult2)
+	),
+	!.
 
 listlength([],0).
 listlength([ _ | Rest ],Len) :-
