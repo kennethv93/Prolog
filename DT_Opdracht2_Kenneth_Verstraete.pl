@@ -1,18 +1,19 @@
-%Schrijf 3 predicaten die werken op bomen en lijsten - de representatie
-%van bomen volgt daarbij die gezien in de les van 21 februari.
+/*
+1) maak_boom/2
 
-%1) maak_boom/2
-%
-%   arg1: gesloten lijst met getallen; input
-%   arg2: gebalanceerde boom die alle getallen uit arg1 bevat in prefix orde
-%
-%
-%voorbeeld:
-%
-%?- maak_boom([1,2,3,4,5],B).
-%
-%B = boom(boom(leeg,boom(leeg,leeg,3),2),boom(leeg,boom(leeg,leeg,5),4),1)
+   arg1: gesloten lijst met getallen; input
+   arg2: gebalanceerde boom die alle getallen uit arg1 bevat in prefix orde
 
+voorbeeld:
+
+?- maak_boom([1,2,3,4,5],B).
+
+B = boom(boom(leeg,boom(leeg,leeg,3),2),boom(leeg,boom(leeg,leeg,5),4),1)
+*/
+
+%%%%%%%%%%%%%%%%
+%% BASE CASES %%
+%%%%%%%%%%%%%%%%
 maak_boom(X,B):-
 	listlength(X,1),
 	B = boom(leeg,leeg,Y),
@@ -28,18 +29,22 @@ maak_boom(X,B):-
 
 maak_boom(X,B):-
 	listlength(X,3),
-	B = boom(Y,W,Z),
+	B = boom(boom(leeg,leeg,Y),boom(leeg,leeg,W),Z),
 	X = [Z|Rest],
 	Rest = [Y|Rest2],
 	Rest2 = [W|_],
 	!.
-	
+
+%%%%%%%%%%%%%%%%%%
+%% COMPLEX CASE %%
+%%%%%%%%%%%%%%%%%%
 maak_boom(X,B):-
 	B = boom(L,R,Root),
 	X = [Root|Rest],
 	split(Rest,Left,Right),
 	maak_boom(Left,L),
-	maak_boom(Right,R).
+	maak_boom(Right,R),
+	!.
 
 %2) verzamel_waarden/2
 %
@@ -78,7 +83,8 @@ msort(List,Sorted):-
 	split(List,L,R),
 	msort(L,S1),
 	msort(R,S2),
-	merge_(S1,S2,Sorted).
+	merge_(S1,S2,Sorted),
+	!.
 
 split([],[],[]).
 split(List,L,R):-
