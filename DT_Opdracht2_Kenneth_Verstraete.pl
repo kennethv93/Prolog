@@ -1,88 +1,122 @@
+%%%%%%%%%%%%%%%%
+%% ListLength %%
+%%%%%%%%%%%%%%%%
+	listlength([],0).
+	listlength([ _ | Rest ],Len) :-
+		listlength(Rest,LenRest),
+		Len is LenRest + 1.
+
 /*
-1) maak_boom/2
+1) maak_boom
 
-   arg1: gesloten lijst met getallen; input
-   arg2: gebalanceerde boom die alle getallen uit arg1 bevat in prefix orde
-
-voorbeeld:
-
-?- maak_boom([1,2,3,4,5],B).
-
-B = boom(boom(leeg,boom(leeg,leeg,3),2),boom(leeg,boom(leeg,leeg,5),4),1)
+	arg1: gesloten lijst met getallen; input
+	arg2: gebalanceerde boom die alle getallen uit arg1 bevat in prefix orde
 */
 
 %%%%%%%%%%%%%%%%
 %% BASE CASES %%
 %%%%%%%%%%%%%%%%
-maak_boom(X,B):-
-	listlength(X,1),
-	B = boom(leeg,leeg,Y),
-	X = [Y|_],
-	!.
 
-maak_boom(X,B):-
-	listlength(X,2),
-	B = boom(leeg,boom(leeg,leeg,Y),Z),
-	X = [Z|Rest],
-	Rest = [Y|_],
-	!.
-
-maak_boom(X,B):-
-	listlength(X,3),
-	B = boom(boom(leeg,leeg,Y),boom(leeg,leeg,W),Z),
-	X = [Z|Rest],
-	Rest = [Y|Rest2],
-	Rest2 = [W|_],
-	!.
+	% Boom met 1 element
+		maak_boom(X,B):-
+			listlength(X,1),
+			B = boom(leeg,leeg,Y),
+			X = [Y|_],
+			!.
+	
+	% Boom met 2 elementen	
+		maak_boom(X,B):-
+			listlength(X,2),
+			B = boom(leeg,boom(leeg,leeg,Y),Z),
+			X = [Z|Rest],
+			Rest = [Y|_],
+			!.
+	
+	% Boom met 3 elementen	
+		maak_boom(X,B):-
+			listlength(X,3),
+			B = boom(boom(leeg,leeg,Y),boom(leeg,leeg,W),Z),
+			X = [Z|Rest],
+			Rest = [Y|Rest2],
+			Rest2 = [W|_],
+			!.
 
 %%%%%%%%%%%%%%%%%%
 %% COMPLEX CASE %%
 %%%%%%%%%%%%%%%%%%
-maak_boom(X,B):-
-	B = boom(L,R,Root),
-	X = [Root|Rest],
-	split(Rest,Left,Right),
-	maak_boom(Left,L),
-	maak_boom(Right,R),
+
+	maak_boom(X,B):-
+		B = boom(L,R,Root),
+		X = [Root|Rest],
+		split(Rest,Left,Right),
+		maak_boom(Left,L),
+		maak_boom(Right,R),
+		!.
+
+/*
+2) verzamel_waarden
+
+ arg1: gegeven boom
+ arg2: output: lijst van waarden in de boom, in de infix orde
+
+Probeer dit met en zonder findall/3.
+*/
+
+% ZONDER FINDALL
+
+%%%%%%%%%%%%%%%%
+%% BASE CASES %%
+%%%%%%%%%%%%%%%%
+	verzamel_waarden(leeg,[]):-!.
+		
+	verzamel_waarden(boom(leeg,leeg,X),[X]):-!.
+
+%%%%%%%%%%%%%%%%%%
+%% COMPLEX CASE %%
+%%%%%%%%%%%%%%%%%%
+	verzamel_waarden(boom(L,R,X),Waarden):-
+		verzamel_waarden(L,WaardenL),
+		verzamel_waarden(R,WaardenR),
+		Waarden1 = WaardenL,
+		append(Waarden1,[X],Waarden2),
+		append(Waarden2,WaardenR,Waarden),
+		!.
+
+% MET FINDALL
+
+% definiëren boom-predicaat
+boom(leeg,leeg,_).
+
+%%%%%%%%%%%%%%%%
+%% BASE CASES %%
+%%%%%%%%%%%%%%%%
+	verzamel_waarden_findall(leeg,[]):-!.
+	
+	verzamel_waarden_findall(boom(leeg,leeg,X),Waarden):-
+		findall(X,boom(leeg,leeg,X),Waarden),
 	!.
 
-%2) verzamel_waarden/2
-%
-%   arg1: gegeven boom
-%   arg2: output: lijst van waarden in de boom, in de infix orde
-%
-%verzamel_waarden(boom(boom(leeg,boom(leeg,leeg,3),2),boom(leeg,boom(leeg,leeg,5),4),1),Waarden).
-%
-%
-%?- verzamel_waarden(boom(boom(leeg,boom(leeg,leeg,3),2),boom(leeg,boom(leeg,leeg,5),4),1),Waarden).
-%
-%Waarden = [2,3,1,4,5]
-%
-%
-%Probeer dit met en zonder findall/3.
-verzamel_waarden(leeg,Waarden):-
-	Waarden = [],
-	!.
-verzamel_waarden(boom(leeg,leeg,X),Waarden):-
-	Waarden = [X].
+%%%%%%%%%%%%%%%%%%
+%% COMPLEX CASE %%
+%%%%%%%%%%%%%%%%%%	
+	verzamel_waarden_findall(boom(L,R,X),Waarden):-
+		verzamel_waarden_findall(L,WaardenL),
+		verzamel_waarden_findall(R,WaardenR),
+		Waarden1 = WaardenL,
+		append(Waarden1,[X],Waarden2),
+		append(Waarden2,WaardenR,Waarden),
+		!.
 
-verzamel_waarden(boom(L,R,X),Waarden):-
-	verzamel_waarden(L,WaardenL),
-	verzamel_waarden(R,WaardenR),
-	Waarden1 = WaardenL,
-	append(Waarden1,[X],Waarden2),
-	append(Waarden2,WaardenR,Waarden),
-	!. 
-
-
-%3) Schrijf een merge sort/2
-msort(X,X):-
+/*
+3) Schrijf een merge sort
+*/
+mergesort(X,X):-
 	listlength(X,1),
 	!.
-msort(List,Sorted):-
+mergesort(List,Sorted):-
 	split(List,L,R),
-	msort(L,S1),
-	msort(R,S2),
+	mergesort(L,S1),
+	mergesort(R,S2),
 	merge_(S1,S2,Sorted),
 	!.
 
@@ -113,15 +147,8 @@ merge_(X,Y,Result):-
 	XHead < YHead ->
 		merge_(XRest,Y,MergeResult),
 		append([XHead],MergeResult,Result)
-		
 	;
 		merge_(X,YRest,MergeResult2),
 		append([YHead],MergeResult2,Result)
-		
 	),
-	!. 
-
-listlength([],0).
-listlength([ _ | Rest ],Len) :-
-		listlength(Rest,LenRest),
-		Len is LenRest + 1.
+	!.
