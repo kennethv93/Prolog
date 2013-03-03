@@ -119,24 +119,24 @@ mergesort(X,X):-
 mergesort(List,Sorted):-
 	List \= [],
 	split(List,L,R),
-	mergesort(L,S1),
-	mergesort(R,S2),
-	merge_(S1,S2,Sorted),
+	mergesort(L,SortedL),
+	mergesort(R,SortedR),
+	merge_(SortedL,SortedR,Sorted),
 	!.
 
 % splitting
 split([],[],[]).
 split(List,L,R):-
-	listlength(List,K),
+	listlength(List,Length),
 	(
-	0 is K mod 2 ->
+	0 is Length mod 2 ->
 		append(L,R,List),
-		M is K/2,
+		M is Length/2,
 		listlength(L,M)
 	;
 		append(L,R,List),
 		listlength(L,N),
-		K is 2*N-1
+		Length is 2*N-1
 	),
 	!.
 
