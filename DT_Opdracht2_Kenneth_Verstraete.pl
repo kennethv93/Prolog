@@ -13,7 +13,33 @@
 %
 %B = boom(boom(leeg,boom(leeg,leeg,3),2),boom(leeg,boom(leeg,leeg,5),4),1)
 
+maak_boom(X,B):-
+	listlength(X,1),
+	B = boom(leeg,leeg,Y),
+	X = [Y|_],
+	!.
 
+maak_boom(X,B):-
+	listlength(X,2),
+	B = boom(leeg,boom(leeg,leeg,Y),Z),
+	X = [Z|Rest],
+	Rest = [Y|_],
+	!.
+
+maak_boom(X,B):-
+	listlength(X,3),
+	B = boom(Y,W,Z),
+	X = [Z|Rest],
+	Rest = [Y|Rest2],
+	Rest2 = [W|_],
+	!.
+	
+maak_boom(X,B):-
+	B = boom(L,R,Root),
+	X = [Root|Rest],
+	split(Rest,Left,Right),
+	maak_boom(Left,L),
+	maak_boom(Right,R).
 
 %2) verzamel_waarden/2
 %
@@ -29,8 +55,16 @@
 %
 %
 %Probeer dit met en zonder findall/3.
+verzamel_waarden(boom(leeg,leeg,X),Waarden):-
+	Waarden = [X],
+	!.
 
-
+verzamen_waarden(boom(L,R,X),Waarden):-
+	verzamel_waarden(L,WaardenL),
+	verzamel_waarden(R,WaardenR),
+	Waarden = [X],
+	Waarden = append(Waarden,WaardenL),
+	Waarden = append(Waarden,WaardenR).
 
 
 %3) Schrijf een merge sort/2
