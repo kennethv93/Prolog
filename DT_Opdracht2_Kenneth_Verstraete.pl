@@ -55,16 +55,19 @@ maak_boom(X,B):-
 %
 %
 %Probeer dit met en zonder findall/3.
-verzamel_waarden(boom(leeg,leeg,X),Waarden):-
-	Waarden = [X],
+verzamel_waarden(leeg,Waarden):-
+	Waarden = [],
 	!.
+verzamel_waarden(boom(leeg,leeg,X),Waarden):-
+	Waarden = [X].
 
-verzamen_waarden(boom(L,R,X),Waarden):-
+verzamel_waarden(boom(L,R,X),Waarden):-
 	verzamel_waarden(L,WaardenL),
 	verzamel_waarden(R,WaardenR),
-	Waarden = [X],
-	Waarden = append(Waarden,WaardenL),
-	Waarden = append(Waarden,WaardenR).
+	Waarden1 = WaardenL,
+	append(Waarden1,[X],Waarden2),
+	append(Waarden2,WaardenR,Waarden),
+	!. 
 
 
 %3) Schrijf een merge sort/2
