@@ -110,16 +110,21 @@ boom(leeg,leeg,_).
 /*
 3) Schrijf een merge sort
 */
+
+% merge sort
+mergesort([],[]):-!.
 mergesort(X,X):-
 	listlength(X,1),
 	!.
 mergesort(List,Sorted):-
+	List \= [],
 	split(List,L,R),
 	mergesort(L,S1),
 	mergesort(R,S2),
 	merge_(S1,S2,Sorted),
 	!.
 
+% splitting
 split([],[],[]).
 split(List,L,R):-
 	listlength(List,K),
@@ -132,12 +137,13 @@ split(List,L,R):-
 		append(L,R,List),
 		listlength(L,N),
 		K is 2*N-1
-	).
+	),
+	!.
 
-merge_([],[],[]).
-merge_(X,[],X).
-merge_([],X,X).
-
+% merging
+merge_([],[],[]):-!.
+merge_(X,[],X):-!.
+merge_([],X,X):-!.
 merge_(X,Y,Result):-
 	X\=[],
 	Y\=[],
