@@ -15,7 +15,6 @@
 
 
 
-
 %2) verzamel_waarden/2
 %
 %   arg1: gegeven boom
@@ -35,3 +34,29 @@
 
 
 %3) Schrijf een merge sort/2
+msort([],[]).
+msort([L|R],Sorted):-
+	split([],L,R).
+	
+split([],[],[]).
+
+split(List,L,R):-
+	listlength(List,K),
+	(
+	0 is K mod 2 ->
+		append(L,R,List),
+		M is K/2,
+		listlength(L,M)		
+	;
+		append(L,R,List),
+		listlength(L,M+1)
+	).
+
+	 
+
+
+listlength([],0).
+listlength([ _ | Rest ],Len) :-
+		listlength(Rest,LenRest),
+		Len is LenRest + 1 . 
+
