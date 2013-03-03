@@ -46,13 +46,12 @@ split(List,L,R):-
 	0 is K mod 2 ->
 		append(L,R,List),
 		M is K/2,
-		listlength(L,M)		
+		listlength(L,M)
 	;
 		append(L,R,List),
-		listlength(L,M+1)
+		listlength(L,N),
+		K is 2*N-1
 	).
-
-	 
 
 
 listlength([],0).
