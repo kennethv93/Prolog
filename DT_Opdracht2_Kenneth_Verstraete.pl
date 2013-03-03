@@ -105,13 +105,15 @@ merge_(X,Y,Result):-
 	Y = [YHead|YRest],
 	(
 	XHead < YHead ->
-		append(XHead,MergeResult,Result),
-		merge_(XRest,Y,MergeResult)
+		merge_(XRest,Y,MergeResult),
+		append([XHead],MergeResult,Result)
+		
 	;
-		append(YHead,MergeResult2,Result),
-		merge_(X,YRest,MergeResult2)
+		merge_(X,YRest,MergeResult2),
+		append([YHead],MergeResult2,Result)
+		
 	),
-	!.
+	!. 
 
 listlength([],0).
 listlength([ _ | Rest ],Len) :-
