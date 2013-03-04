@@ -24,7 +24,8 @@
 				X = [Y|_],
 				!.
 		
-		% Boom met 2 elementen	
+		% Boom met 2 elementen (voor de uitvoer zoals in het voorbeeld
+		% te bekomen)
 			maak_boom(X,B):-
 				listlength(X,2),
 				B = boom(leeg,boom(leeg,leeg,Y),Z),
@@ -106,8 +107,6 @@ Probeer dit met en zonder findall/3.
 		!.
 
 % splitting
-	split([],[],[]).
-	
 	split(List,L,R):-
 		listlength(List,Length),
 		(
