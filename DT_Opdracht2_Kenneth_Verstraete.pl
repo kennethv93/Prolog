@@ -65,6 +65,9 @@ Probeer dit met en zonder findall/3.
 			Waarden1 = WaardenL,
 			append(Waarden1,[X],Waarden2),
 			append(Waarden2,WaardenR,Waarden),
+			
+			% Waarden1 = WaardenL overbodig
+			% app(WaardenL,[X|WR],W) ipv 2 append
 		!.
 
 % MET FINDALL
@@ -122,13 +125,13 @@ Probeer dit met en zonder findall/3.
 		!.
 
 % merging
-	merge_([],[],[]):-!.
+	%merge_([],[],[]):-!.
 	merge_(X,[],X):-!.
 	merge_([],X,X):-!.
 	
 	merge_(X,Y,Result):-
-		X\=[],
-		Y\=[],
+		%X\=[],
+		%Y\=[],
 		X = [XHead|XRest],
 		Y = [YHead|YRest],
 		(
